@@ -30,4 +30,5 @@ check_sp_rxy_ids <- function(SP, Rxy) {
   if (throw == TRUE) {
     stop("Fatal error.  Please fix your input errors...")
   }
+  invisible("")
 }

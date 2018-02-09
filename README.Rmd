@@ -10,7 +10,7 @@ output:
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "README-"
+  fig.path = "readme-figs/"
 )
 ```
 
@@ -19,12 +19,26 @@ knitr::opts_chunk$set(
 The goal of CohoBroodstock is to put a bunch of useful functions into one place to expedite
 Libby's coho broodstock management work.
 
-## Realized vs Optimal vs Random Relatedness
+## Installing
+
+If you don't already have the `devtools` package, then do:
+```{r, eval=FALSE}
+install.packages("devtools")
+```
+
+Then use it to install this from GitHub:
+```{r}
+devtools::install_github("eriqande/CohoBroodstock")
+```
+## Actual vs Optimal vs Random Relatedness
 
 Here is how it goes. First, read the symmetrical full matrix of rxy values:
-```{r}
+```{r, message=FALSE, warning=FALSE}
+library(CohoBroodstock)
 library(tidyverse)
+
 file_path <- system.file("extdata/IGH_W1718_master_Kinsh_res.txt.gz", package = "CohoBroodstock")
+
 rxys <- read_kinship_matrix(file_path)
 ```
 
@@ -43,4 +57,19 @@ actual_pairs <- read_csv(pairs_file)
 This looks like this:
 ```{r}
 actual_pairs[1:10, ]
+```
+
+Then we get the actual Rxy's, and the same number of Optimal and Random Rxys:
+```{r}
+set.seed(10)  # set a random number seed for reproducibility
+AOR <- aor_pairs(actual_pairs, rxys)
+
+# have a look at it:
+AOR
+```
+
+Then plot in a histogram:
+```{r aor_histo1}
+ggplot(AOR, aes(x =  rxy, fill = pair_type)) +
+  geom_histogram(position = "dodge", alpha = 0.75, binwidth = 0.03)
 ```

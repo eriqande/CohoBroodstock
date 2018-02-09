@@ -7,6 +7,9 @@
 #' @export
 aor_pairs <- function(SP, Rxy) {
 
+  # check for errors
+  check_sp_rxy_ids(SP, Rxy)
+
   # first get the actual rxys for the spawn pairs
   actual <- dplyr::left_join(SP, Rxy, by = c("Female", "Male")) %>%
     dplyr::group_by(Female) %>%
@@ -22,16 +25,24 @@ aor_pairs <- function(SP, Rxy) {
   opts <- dplyr::left_join(nums, Rxy, by = "Female") %>%
     dplyr::group_by(Female) %>%
     dplyr::do(.data = ., top_n(x = ., n = .$num[1], wt = -.$rxy)) %>%
-    dplyr::mutate(idx = 1:n())
+    dplyr::mutate(idx = 1:n()) %>%
+    dplyr::ungroup()
 
   # and now get another for the randoms
   randos <- dplyr::left_join(nums, Rxy, by = "Female") %>%
     dplyr::group_by(Female) %>%
     dplyr::do(.data = ., sample_n(tbl = ., size = .$num[1])) %>%
-    dplyr::mutate(idx = 1:n())
+    dplyr::mutate(idx = 1:n()) %>%
+    dplyr::ungroup()
 
 
-
+  # put them together into a single data frame
+  list(actual = actual,
+       optimal = opts,
+       random = randos) %>%
+    dplyr::bind_rows(.id = "pair_type") %>%
+    dplyr::arrange(Female, pair_type, idx) %>%
+    select(Female, Male, pair_type, idx, pair_type, rxy)
 
 }
 
