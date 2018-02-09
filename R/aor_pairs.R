@@ -13,7 +13,7 @@ aor_pairs <- function(SP, Rxy) {
   # first get the actual rxys for the spawn pairs
   actual <- dplyr::left_join(SP, Rxy, by = c("Female", "Male")) %>%
     dplyr::group_by(Female) %>%
-    dplyr::mutate(idx = 1:n()) %>%
+    dplyr::mutate(idx = 1:(dplyr::n())) %>%
     dplyr::ungroup()
 
   # get the number of males mated to each female
@@ -24,15 +24,15 @@ aor_pairs <- function(SP, Rxy) {
   # now get a data frame for getting the optimals
   opts <- dplyr::left_join(nums, Rxy, by = "Female") %>%
     dplyr::group_by(Female) %>%
-    dplyr::do(.data = ., top_n(x = ., n = .$num[1], wt = -.$rxy)) %>%
-    dplyr::mutate(idx = 1:n()) %>%
+    dplyr::do(.data = ., dplyr::top_n(x = ., n = .$num[1], wt = -.$rxy)) %>%
+    dplyr::mutate(idx = 1:(dplyr::n())) %>%
     dplyr::ungroup()
 
   # and now get another for the randoms
   randos <- dplyr::left_join(nums, Rxy, by = "Female") %>%
     dplyr::group_by(Female) %>%
-    dplyr::do(.data = ., sample_n(tbl = ., size = .$num[1])) %>%
-    dplyr::mutate(idx = 1:n()) %>%
+    dplyr::do(.data = ., dplyr::sample_n(tbl = ., size = .$num[1])) %>%
+    dplyr::mutate(idx = 1:(dplyr::n())) %>%
     dplyr::ungroup()
 
 
@@ -42,7 +42,7 @@ aor_pairs <- function(SP, Rxy) {
        random = randos) %>%
     dplyr::bind_rows(.id = "pair_type") %>%
     dplyr::arrange(Female, pair_type, idx) %>%
-    select(Female, Male, pair_type, idx, pair_type, rxy)
+    dplyr::select(Female, Male, pair_type, idx, pair_type, rxy)
 
 }
 

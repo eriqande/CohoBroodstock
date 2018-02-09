@@ -10,7 +10,7 @@
 check_sp_rxy_ids <- function(SP, Rxy) {
   throw <- FALSE
 
-  missers <- anti_join(SP, Rxy, by = c("Female", "Male"))
+  missers <- dplyr::anti_join(SP, Rxy, by = c("Female", "Male"))
 
   if (nrow(missers) > 0) {
     message("Error: The following table shows spawn pairs not found in Rxy")
