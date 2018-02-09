@@ -71,6 +71,8 @@ AOR
 
 Then plot those values in a histogram:
 ```{r aor_histo1}
-ggplot(AOR, aes(x =  rxy, fill = pair_type)) +
-  geom_histogram(position = "dodge", alpha = 0.75, binwidth = 0.03)
+cols <- c(Actual = "gold", Optimal = "limegreen", Random = "steelblue1")
+ggplot(AOR, aes(x =  rxy, fill = `Spawn Pairs`)) +
+  geom_histogram(position = "dodge", alpha = 0.75, binwidth = 0.03, color = "black", size = 0.2) +
+  scale_fill_manual(values = cols)
 ```

@@ -1,6 +1,6 @@
 CohoBroodstock
 ================
-08 February, 2018
+09 February, 2018
 
 -   [Installing](#installing)
 -   [Actual vs Optimal vs Random Relatedness](#actual-vs-optimal-vs-random-relatedness)
@@ -91,26 +91,28 @@ AOR <- aor_pairs(actual_pairs, rxys)
 # have a look at it:
 AOR
 #> # A tibble: 225 x 5
-#>    Female Male    pair_type   idx     rxy
-#>    <chr>  <chr>   <chr>     <int>   <dbl>
-#>  1 F_01F  M_14MJ  actual        1 -0.153 
-#>  2 F_01F  M_21MJ  actual        2 -0.269 
-#>  3 F_01F  M_52M   optimal       1 -0.396 
-#>  4 F_01F  M_nb002 optimal       2 -0.295 
-#>  5 F_01F  M_31MJ  random        1 -0.0130
-#>  6 F_01F  M_19MJ  random        2 -0.0382
-#>  7 F_02F  M_46M   actual        1 -0.0493
-#>  8 F_02F  M_41MJ  actual        2  0.0181
-#>  9 F_02F  M_17MJ  optimal       1 -0.301 
-#> 10 F_02F  M_nb002 optimal       2 -0.345 
+#>    Female Male    `Spawn Pairs`   idx     rxy
+#>    <chr>  <chr>   <chr>         <int>   <dbl>
+#>  1 F_01F  M_14MJ  Actual            1 -0.153 
+#>  2 F_01F  M_21MJ  Actual            2 -0.269 
+#>  3 F_01F  M_52M   Optimal           1 -0.396 
+#>  4 F_01F  M_nb002 Optimal           2 -0.295 
+#>  5 F_01F  M_31MJ  Random            1 -0.0130
+#>  6 F_01F  M_19MJ  Random            2 -0.0382
+#>  7 F_02F  M_46M   Actual            1 -0.0493
+#>  8 F_02F  M_41MJ  Actual            2  0.0181
+#>  9 F_02F  M_17MJ  Optimal           1 -0.301 
+#> 10 F_02F  M_nb002 Optimal           2 -0.345 
 #> # ... with 215 more rows
 ```
 
 Then plot those values in a histogram:
 
 ``` r
-ggplot(AOR, aes(x =  rxy, fill = pair_type)) +
-  geom_histogram(position = "dodge", alpha = 0.75, binwidth = 0.03)
+cols <- c(Actual = "gold", Optimal = "limegreen", Random = "steelblue1")
+ggplot(AOR, aes(x =  rxy, fill = `Spawn Pairs`)) +
+  geom_histogram(position = "dodge", alpha = 0.75, binwidth = 0.03, color = "black", size = 0.2) +
+  scale_fill_manual(values = cols)
 ```
 
 ![](readme-figs/aor_histo1-1.png)
