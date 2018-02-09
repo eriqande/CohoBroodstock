@@ -1,0 +1,46 @@
+---
+output:
+  github_document:
+    toc: yes
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+# CohoBroodstock
+
+The goal of CohoBroodstock is to put a bunch of useful functions into one place to expedite
+Libby's coho broodstock management work.
+
+## Realized vs Optimal vs Random Relatedness
+
+Here is how it goes. First, read the symmetrical full matrix of rxy values:
+```{r}
+library(tidyverse)
+file_path <- system.file("extdata/IGH_W1718_master_Kinsh_res.txt.gz", package = "CohoBroodstock")
+rxys <- read_kinship_matrix(file_path)
+```
+
+Here is what the first few rows of that looks like
+```{r}
+rxys[1:10, ]
+```
+
+
+Then we need to read in the actual spawn pairs.  This should be two columns: first Female and then Male:
+```{r}
+pairs_file <- system.file("extdata/IGH_W1718_actual_spawn_pairs.csv", package = "CohoBroodstock")
+actual_pairs <- read_csv(pairs_file)
+```
+
+This looks like this:
+```{r}
+actual_pairs[1:10, ]
+```

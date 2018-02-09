@@ -1,0 +1,37 @@
+
+
+#' deliver the rxy values for the actual, optimal, and random pairs
+#'
+#' @param SP two column tibble with columns Female and Male giving the actual spawn pairs
+#' @param Rxy the Rxy matrix in tidy format. (The output of \code{\link{read_kinship_matrix}}).
+#' @export
+aor_pairs <- function(SP, Rxy) {
+
+  # first get the actual rxys for the spawn pairs
+  actual <- dplyr::left_join(SP, Rxy, by = c("Female", "Male")) %>%
+    dplyr::group_by(Female) %>%
+    dplyr::mutate(idx = 1:n()) %>%
+    dplyr::ungroup()
+
+  # get the number of males mated to each female
+  nums <- actual %>%
+    dplyr::count(Female) %>%
+    dplyr::rename(num = n)
+
+  # now get a data frame for getting the optimals
+  opts <- dplyr::left_join(nums, Rxy, by = "Female") %>%
+    dplyr::group_by(Female) %>%
+    dplyr::do(.data = ., top_n(x = ., n = .$num[1], wt = -.$rxy)) %>%
+    dplyr::mutate(idx = 1:n())
+
+  # and now get another for the randoms
+  randos <- dplyr::left_join(nums, Rxy, by = "Female") %>%
+    dplyr::group_by(Female) %>%
+    dplyr::do(.data = ., sample_n(tbl = ., size = .$num[1])) %>%
+    dplyr::mutate(idx = 1:n())
+
+
+
+
+}
+
