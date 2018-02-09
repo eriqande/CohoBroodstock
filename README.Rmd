@@ -1,4 +1,6 @@
 ---
+title: 'CohoBroodstock'
+date: '`r format(Sys.time(), "%d %B, %Y")`'
 output:
   github_document:
     toc: yes
@@ -14,8 +16,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-# CohoBroodstock
-
 The goal of CohoBroodstock is to put a bunch of useful functions into one place to expedite
 Libby's coho broodstock management work.
 
@@ -27,7 +27,7 @@ install.packages("devtools")
 ```
 
 Then use it to install this from GitHub:
-```{r}
+```{r, eval=FALSE}
 devtools::install_github("eriqande/CohoBroodstock")
 ```
 ## Actual vs Optimal vs Random Relatedness
@@ -42,14 +42,14 @@ file_path <- system.file("extdata/IGH_W1718_master_Kinsh_res.txt.gz", package = 
 rxys <- read_kinship_matrix(file_path)
 ```
 
-Here is what the first few rows of that looks like
+Here is what the first few rows of that look like
 ```{r}
 rxys[1:10, ]
 ```
 
 
 Then we need to read in the actual spawn pairs.  This should be two columns: first Female and then Male:
-```{r}
+```{r, message=FALSE}
 pairs_file <- system.file("extdata/IGH_W1718_actual_spawn_pairs.csv", package = "CohoBroodstock")
 actual_pairs <- read_csv(pairs_file)
 ```
@@ -59,7 +59,8 @@ This looks like this:
 actual_pairs[1:10, ]
 ```
 
-Then we get the actual Rxy's, and the same number of Optimal and Random Rxys:
+Then we get the Rxy's of the actual spawn pairs, and alsothe same number of Optimal-mate Rxys, and the
+same number of Random-mate Rxys:
 ```{r}
 set.seed(10)  # set a random number seed for reproducibility
 AOR <- aor_pairs(actual_pairs, rxys)
@@ -68,7 +69,7 @@ AOR <- aor_pairs(actual_pairs, rxys)
 AOR
 ```
 
-Then plot in a histogram:
+Then plot those values in a histogram:
 ```{r aor_histo1}
 ggplot(AOR, aes(x =  rxy, fill = pair_type)) +
   geom_histogram(position = "dodge", alpha = 0.75, binwidth = 0.03)

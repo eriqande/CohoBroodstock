@@ -1,12 +1,11 @@
+CohoBroodstock
+================
+08 February, 2018
 
--   [CohoBroodstock](#cohobroodstock)
-    -   [Installing](#installing)
-    -   [Actual vs Optimal vs Random Relatedness](#actual-vs-optimal-vs-random-relatedness)
+-   [Installing](#installing)
+-   [Actual vs Optimal vs Random Relatedness](#actual-vs-optimal-vs-random-relatedness)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-CohoBroodstock
-==============
-
 The goal of CohoBroodstock is to put a bunch of useful functions into one place to expedite Libby's coho broodstock management work.
 
 Installing
@@ -22,9 +21,6 @@ Then use it to install this from GitHub:
 
 ``` r
 devtools::install_github("eriqande/CohoBroodstock")
-#> Downloading GitHub repo eriqande/CohoBroodstock@master
-#> from URL https://api.github.com/repos/eriqande/CohoBroodstock/zipball/master
-#> Installation failed: Not Found (404)
 ```
 
 Actual vs Optimal vs Random Relatedness
@@ -41,7 +37,7 @@ file_path <- system.file("extdata/IGH_W1718_master_Kinsh_res.txt.gz", package = 
 rxys <- read_kinship_matrix(file_path)
 ```
 
-Here is what the first few rows of that looks like
+Here is what the first few rows of that look like
 
 ``` r
 rxys[1:10, ]
@@ -65,11 +61,6 @@ Then we need to read in the actual spawn pairs. This should be two columns: firs
 ``` r
 pairs_file <- system.file("extdata/IGH_W1718_actual_spawn_pairs.csv", package = "CohoBroodstock")
 actual_pairs <- read_csv(pairs_file)
-#> Parsed with column specification:
-#> cols(
-#>   Female = col_character(),
-#>   Male = col_character()
-#> )
 ```
 
 This looks like this:
@@ -91,7 +82,7 @@ actual_pairs[1:10, ]
 #> 10 F_06F  M_27M
 ```
 
-Then we get the actual Rxy's, and the same number of Optimal and Random Rxys:
+Then we get the Rxy's of the actual spawn pairs, and alsothe same number of Optimal-mate Rxys, and the same number of Random-mate Rxys:
 
 ``` r
 set.seed(10)  # set a random number seed for reproducibility
@@ -115,7 +106,7 @@ AOR
 #> # ... with 215 more rows
 ```
 
-Then plot in a histogram:
+Then plot those values in a histogram:
 
 ``` r
 ggplot(AOR, aes(x =  rxy, fill = pair_type)) +
