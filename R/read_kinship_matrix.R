@@ -3,7 +3,9 @@
 #' read a tab-delimited kinship matrix into a tidy tibble of rxy values
 #'
 #' It has to be the full symmetric matrix.  Can't be the lower half. Males have
-#' to be named "M_XXX" and females "F_XXX" where XXX are some numbers.
+#' to be named "MXXX" and females "FXXX" where XXX are some numbers or
+#' characters or whatever.  The main thing is that females have to start
+#' with an F and males with an M.
 #' @param path path to the file
 #' @param skip number of lines to skip in the beginning
 #' This forces the first column to be a female and the second a male.
@@ -17,7 +19,7 @@ read_kinship_matrix <- function(path, skip = 8) {
     tidyr::gather(key = "X2", value = "rxy", -X1) %>%
     dplyr::mutate(rxy = as.numeric(rxy)) %>%
     dplyr::filter(!is.na(rxy)) %>%
-    dplyr::filter(stringr::str_detect(X1, "^F_") & stringr::str_detect(X2, "^M_")) %>%
+    dplyr::filter(stringr::str_detect(X1, "^F") & stringr::str_detect(X2, "^M")) %>%
     dplyr::rename(Female = X1, Male = X2)
 }
 

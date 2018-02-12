@@ -16,7 +16,9 @@ between females and females, for exmample).}
 }
 \description{
 It has to be the full symmetric matrix.  Can't be the lower half. Males have
-to be named "M_XXX" and females "F_XXX" where XXX are some numbers.
+to be named "MXXX" and females "FXXX" where XXX are some numbers or
+characters or whatever.  The main thing is that females have to start
+with an F and males with an M.
 }
 \examples{
 kfile <- system.file("extdata/IGH_W1718_master_Kinsh_res.txt.gz", package = "CohoBroodstock")

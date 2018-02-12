@@ -1,6 +1,6 @@
 CohoBroodstock
 ================
-09 February, 2018
+12 February, 2018
 
 -   [Installing](#installing)
 -   [Actual vs Optimal vs Random Relatedness](#actual-vs-optimal-vs-random-relatedness)
