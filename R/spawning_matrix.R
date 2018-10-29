@@ -11,7 +11,7 @@
 #' in the current working directory.
 #' @return Returns a list of the two matrices.  Typically not used so they are returned invisibly.
 #' @export
-spawning_matrix <- function(Rxy, rxy_cutoff = 0.1, file_prefix = "") {
+spawning_matrix <- function(Rxy_path, rxy_cutoff = 0.1, file_prefix = "") {
   Rxy <- read_kinship_matrix(path = Rxy_path)
 
   rsorted <- Rxy %>%

@@ -4,9 +4,11 @@
 \alias{spawning_matrix}
 \title{arrange the rxy values and IDs into a matrix for spawning guidance purposes}
 \usage{
-spawning_matrix(Rxy, rxy_cutoff = 0.1, file_prefix = "")
+spawning_matrix(Rxy_path, rxy_cutoff = 0.1, file_prefix = "")
 }
 \arguments{
+\item{Rxy_path}{the path to the Rxy matrix.}
+
 \item{rxy_cutoff}{Any male with an Rxy value greater than this to a certain female will
 have two asterices attached to its name so that the hatchery knows not to spawn him with this
 female. Defaults to 0.1.}
@@ -14,8 +16,6 @@ female. Defaults to 0.1.}
 \item{file_prefix}{Files will come out named file_prefix + spawn_matrix_full.csv and file_prefix + spawn_matrix.csv.
 By default this is blank. You can use this to specify a path to use as well.  By default it comes out
 in the current working directory.}
-
-\item{Rxy_path}{the path to the Rxy matrix.}
 }
 \value{
 Returns a list of the two matrices.  Typically not used so they are returned invisibly.
