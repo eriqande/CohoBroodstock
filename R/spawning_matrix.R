@@ -12,7 +12,7 @@
 #' @return Returns a list of the two matrices.  Typically not used so they are returned invisibly.
 #' @export
 spawning_matrix <- function(Rxy_path, rxy_cutoff = 0.1, file_prefix = "") {
-  Rxy <- read_kinship_matrix(path = Rxy_path)
+  Rxy <- read_kinship_matrix(path = Rxy_path, skip = 6)  # note skip=6 is needed for readr1.2.1 that seems to have a bug in which it doesn't count empty lines before the header
 
   rsorted <- Rxy %>%
     dplyr::arrange(Female, rxy) %>%

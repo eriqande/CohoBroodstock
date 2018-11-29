@@ -15,7 +15,7 @@
 #' kfile <- system.file("extdata/IGH_W1718_master_Kinsh_res.txt.gz", package = "CohoBroodstock")
 #' @export
 read_kinship_matrix <- function(path, skip = 8) {
-  readr::read_tsv(path, skip = 8, na = "*") %>%
+  readr::read_tsv(path, skip = skip, na = "*") %>%
     tidyr::gather(key = "X2", value = "rxy", -X1) %>%
     dplyr::mutate(rxy = as.numeric(rxy)) %>%
     dplyr::filter(!is.na(rxy)) %>%
