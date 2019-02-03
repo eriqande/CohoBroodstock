@@ -30,6 +30,10 @@ Then use it to install this from GitHub:
 ```{r, eval=FALSE}
 devtools::install_github("eriqande/CohoBroodstock")
 ```
+
+You also have to get the `related` package installed from R-forge.  That 
+requires some gfortran compilation.  We did that for Libby already.
+
 ## Actual vs Optimal vs Random Relatedness
 
 Here is how it goes. First, read the symmetrical full matrix of rxy values:

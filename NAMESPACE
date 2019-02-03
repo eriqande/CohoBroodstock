@@ -3,6 +3,7 @@
 export("%>%")
 export(aor_pairs)
 export(check_sp_rxy_ids)
+export(computeRxy)
 export(read_kinship_matrix)
 export(spawning_matrix)
 export(two_column2kinship)
