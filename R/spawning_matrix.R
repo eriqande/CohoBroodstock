@@ -2,7 +2,9 @@
 #'
 #' This will write out the matrix to two files, as well.  One for Libby and the other
 #' for the hatchery (in which the Rxy values are not given)
-#' @param Rxy_path the path to the Rxy matrix.
+#' @param Rxy_tidy a long-format (tidy, three columns) spawning matrix
+#' like you would get out of compute Rxy.  Must be given if Rxy_path is not.
+#' @param Rxy_path the path to the Rxy matrix. Must be given if Rxy_tidy is not.
 #' @param rxy_cutoff  Any male with an Rxy value greater than this to a certain female will
 #' have two asterices attached to its name so that the hatchery knows not to spawn him with this
 #' female. Defaults to 0.1.
@@ -11,8 +13,19 @@
 #' in the current working directory.
 #' @return Returns a list of the two matrices.  Typically not used so they are returned invisibly.
 #' @export
-spawning_matrix <- function(Rxy_path, rxy_cutoff = 0.1, file_prefix = "") {
-  Rxy <- read_kinship_matrix(path = Rxy_path, skip = 6)  # note skip=6 is needed for readr1.2.1 that seems to have a bug in which it doesn't count empty lines before the header
+#' @examples
+#' Rxy_tidy <- computeRxy_example_output
+#' spawning_matrix(Rxy_tidy)
+spawning_matrix <- function(Rxy_tidy = NULL, Rxy_path = NULL, rxy_cutoff = 0.1, file_prefix = "") {
+
+  if(!(xor(is.null(Rxy_path), is.null(Rxy_tidy)))) stop("You must supply exactly one of Rxy_tidy or Rxy_path, but not both")
+
+  if(!is.null(Rxy_path)) {
+    Rxy <- read_kinship_matrix(path = Rxy_path, skip = 6)  # note skip=6 is needed for readr1.2.1 that seems to have a bug in which it doesn't count empty lines before the header
+  }
+  if(!is.null(Rxy_tidy)) {
+    Rxy <- prep_rxy_for_spawn_matrix(Rxy_tidy)
+  }
 
   rsorted <- Rxy %>%
     dplyr::arrange(Female, rxy) %>%

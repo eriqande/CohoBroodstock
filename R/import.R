@@ -10,3 +10,8 @@
 #' @usage lhs \%>\% rhs
 NULL
 
+
+
+#### Some focused imports
+#' @importFrom dplyr  case_when filter mutate
+#' @importFrom string str_detect

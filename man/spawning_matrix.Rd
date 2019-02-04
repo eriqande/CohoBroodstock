@@ -4,10 +4,14 @@
 \alias{spawning_matrix}
 \title{arrange the rxy values and IDs into a matrix for spawning guidance purposes}
 \usage{
-spawning_matrix(Rxy_path, rxy_cutoff = 0.1, file_prefix = "")
+spawning_matrix(Rxy_tidy = NULL, Rxy_path = NULL, rxy_cutoff = 0.1,
+  file_prefix = "")
 }
 \arguments{
-\item{Rxy_path}{the path to the Rxy matrix.}
+\item{Rxy_tidy}{a long-format (tidy, three columns) spawning matrix
+like you would get out of compute Rxy.  Must be given if Rxy_path is not.}
+
+\item{Rxy_path}{the path to the Rxy matrix. Must be given if Rxy_tidy is not.}
 
 \item{rxy_cutoff}{Any male with an Rxy value greater than this to a certain female will
 have two asterices attached to its name so that the hatchery knows not to spawn him with this
@@ -23,4 +27,8 @@ Returns a list of the two matrices.  Typically not used so they are returned inv
 \description{
 This will write out the matrix to two files, as well.  One for Libby and the other
 for the hatchery (in which the Rxy values are not given)
+}
+\examples{
+Rxy_tidy <- computeRxy_example_output
+spawning_matrix(Rxy_tidy)
 }

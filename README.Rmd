@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 The goal of CohoBroodstock is to put a bunch of useful functions into one place to expedite
 Libby's coho broodstock management work.
 
-## Installing
+# Installing
 
 If you don't already have the `devtools` package, then do:
 ```{r, eval=FALSE}
@@ -34,13 +34,50 @@ devtools::install_github("eriqande/CohoBroodstock")
 You also have to get the `related` package installed from R-forge.  That 
 requires some gfortran compilation.  We did that for Libby already.
 
-## Actual vs Optimal vs Random Relatedness
+# Preparing Spawning matrices
+
+This is set up now to use the _related_ package to compute the Rxy's.  
+Input is a typical two-column format:  
+
+- First column holds the individual IDs
+- Every two columns after that are one locus.
+- The file must have a row of column headers
+
+The steps are:
+
+1. first, make sure to load the package (and you might
+as well load the tidyverse too...)
+    ```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(CohoBroodstock)
+    ```
+    
+1. read in the file and compute Rxy with computeRxy()
+    ```{r computeRxy, cache=TRUE}
+# get path to the example genotype file
+# (typically you would pass it the path to your own file)
+geno_file <- system.file("extdata",
+                     "WSH_W1718_v5_two_column_data.txt.gz",
+                     package = "CohoBroodstock")
+
+# compute rxy.  This returns a tibble
+rxy <- computeRxy(geno_file)
+    ```
+2. prepare the spawning matrix from the ouput of the last command using
+spawning_matrix().  Like this:
+    ```{r}
+spawning_matrix(Rxy_tidy = rxy)
+    ```
+    
+This creates, by default, two files named `spawn_matrix.csv` and `spawn_matrix_full.csv` in
+the current working directory.
+
+
+
+# Actual vs Optimal vs Random Relatedness
 
 Here is how it goes. First, read the symmetrical full matrix of rxy values:
 ```{r, message=FALSE, warning=FALSE}
-library(CohoBroodstock)
-library(tidyverse)
-
 file_path <- system.file("extdata/IGH_W1718_master_Kinsh_res.txt.gz", package = "CohoBroodstock")
 
 rxys <- read_kinship_matrix(file_path)

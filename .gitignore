@@ -2,3 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+README_cache
+development
+spawn_matrix.csv
+spawn_matrix_full.csv

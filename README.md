@@ -1,17 +1,15 @@
 CohoBroodstock
 ================
-12 February, 2018
-
--   [Installing](#installing)
--   [Actual vs Optimal vs Random Relatedness](#actual-vs-optimal-vs-random-relatedness)
+04 February, 2019
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-The goal of CohoBroodstock is to put a bunch of useful functions into one place to expedite Libby's coho broodstock management work.
 
-Installing
-----------
+The goal of CohoBroodstock is to put a bunch of useful functions into
+one place to expedite Libby’s coho broodstock management work.
 
-If you don't already have the `devtools` package, then do:
+# Installing
+
+If you don’t already have the `devtools` package, then do:
 
 ``` r
 install.packages("devtools")
@@ -23,15 +21,61 @@ Then use it to install this from GitHub:
 devtools::install_github("eriqande/CohoBroodstock")
 ```
 
-Actual vs Optimal vs Random Relatedness
----------------------------------------
+You also have to get the `related` package installed from R-forge. That
+requires some gfortran compilation. We did that for Libby already.
 
-Here is how it goes. First, read the symmetrical full matrix of rxy values:
+# Preparing Spawning matrices
+
+This is set up now to use the *related* package to compute the Rxy’s.  
+Input is a typical two-column format:
+
+  - First column holds the individual IDs
+  - Every two columns after that are one locus.
+  - The file must have a row of column headers
+
+The steps are:
+
+1.  first, make sure to load the package (and you might as well load the
+    tidyverse too…)
+    
+    ``` r
+    library(tidyverse)
+    library(CohoBroodstock)
+    ```
+
+2.  read in the file and compute Rxy with computeRxy()
+    
+    ``` r
+    # get path to the example genotype file
+    # (typically you would pass it the path to your own file)
+    geno_file <- system.file("extdata",
+                     "WSH_W1718_v5_two_column_data.txt.gz",
+                     package = "CohoBroodstock")
+    
+    # compute rxy.  This returns a tibble
+    rxy <- computeRxy(geno_file)
+    #>    user  system elapsed 
+    #>   9.804   0.398  10.334 
+    #> 
+    #> Reading output files into data.frames... Done!
+    ```
+
+3.  prepare the spawning matrix from the ouput of the last command using
+    spawning\_matrix(). Like this:
+    
+    ``` r
+    spawning_matrix(Rxy_tidy = rxy)
+    ```
+
+This creates, by default, two files named `spawn_matrix.csv` and
+`spawn_matrix_full.csv` in the current working directory.
+
+# Actual vs Optimal vs Random Relatedness
+
+Here is how it goes. First, read the symmetrical full matrix of rxy
+values:
 
 ``` r
-library(CohoBroodstock)
-library(tidyverse)
-
 file_path <- system.file("extdata/IGH_W1718_master_Kinsh_res.txt.gz", package = "CohoBroodstock")
 
 rxys <- read_kinship_matrix(file_path)
@@ -56,7 +100,9 @@ rxys[1:10, ]
 #> 10 F_12FN M_01MJ -0.0237
 ```
 
-Then we need to read in the actual spawn pairs. This should be two columns: first Female and then Male:
+Then we need to read in the actual spawn pairs. This should be two
+columns: first Female and then
+Male:
 
 ``` r
 pairs_file <- system.file("extdata/IGH_W1718_actual_spawn_pairs.csv", package = "CohoBroodstock")
@@ -82,7 +128,8 @@ actual_pairs[1:10, ]
 #> 10 F_06F  M_27M
 ```
 
-Then we get the Rxy's of the actual spawn pairs, and alsothe same number of Optimal-mate Rxys, and the same number of Random-mate Rxys:
+Then we get the Rxy’s of the actual spawn pairs, and alsothe same number
+of Optimal-mate Rxys, and the same number of Random-mate Rxys:
 
 ``` r
 set.seed(10)  # set a random number seed for reproducibility
@@ -103,7 +150,7 @@ AOR
 #>  8 F_02F  M_41MJ  Actual            2  0.0181
 #>  9 F_02F  M_17MJ  Optimal           1 -0.301 
 #> 10 F_02F  M_nb002 Optimal           2 -0.345 
-#> # ... with 215 more rows
+#> # … with 215 more rows
 ```
 
 Then plot those values in a histogram:
@@ -115,4 +162,4 @@ ggplot(AOR, aes(x =  rxy, fill = `Spawn Pairs`)) +
   scale_fill_manual(values = cols)
 ```
 
-![](readme-figs/aor_histo1-1.png)
+![](readme-figs/aor_histo1-1.png)<!-- -->
