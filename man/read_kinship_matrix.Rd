@@ -4,7 +4,7 @@
 \alias{read_kinship_matrix}
 \title{read a tab-delimited kinship matrix into a tidy tibble of rxy values}
 \usage{
-read_kinship_matrix(path, skip = 8)
+read_kinship_matrix(path, skip = 6)
 }
 \arguments{
 \item{path}{path to the file}
