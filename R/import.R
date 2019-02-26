@@ -13,5 +13,5 @@ NULL
 
 
 #### Some focused imports
-#' @importFrom dplyr  case_when filter mutate
+#' @importFrom dplyr  case_when filter mutate select
 #' @importFrom string str_detect

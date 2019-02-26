@@ -76,11 +76,11 @@ the current working directory.
 
 # Actual vs Optimal vs Random Relatedness
 
-Here is how it goes. First, read the symmetrical full matrix of rxy values:
+Here is how it goes. We will show it from the genotype stage.
 ```{r, message=FALSE, warning=FALSE}
-file_path <- system.file("extdata/IGH_W1718_master_Kinsh_res.txt.gz", package = "CohoBroodstock")
+geno_path <- system.file("extdata/IGH_W1819_geno_aor.txt", package = "CohoBroodstock")
 
-rxys <- read_kinship_matrix(file_path)
+rxys <- computeRxy(geno_path)
 ```
 
 Here is what the first few rows of that look like
@@ -89,9 +89,9 @@ rxys[1:10, ]
 ```
 
 
-Then we need to read in the actual spawn pairs.  This should be two columns: first Female and then Male:
+Then we need to read in the actual spawn pairs.  This should be two columns: the first one named Female and then Male:
 ```{r, message=FALSE}
-pairs_file <- system.file("extdata/IGH_W1718_actual_spawn_pairs.csv", package = "CohoBroodstock")
+pairs_file <- system.file("extdata/IGH--W1819--actual_spawn_pairs.csv", package = "CohoBroodstock")
 actual_pairs <- read_csv(pairs_file)
 ```
 
@@ -100,11 +100,30 @@ This looks like this:
 actual_pairs[1:10, ]
 ```
 
-Then we get the Rxy's of the actual spawn pairs, and alsothe same number of Optimal-mate Rxys, and the
-same number of Random-mate Rxys:
+Now, in order to use the function `aor_pairs()` we need to format the `rxys` tibble a little bit.
+We need to only keep the individuals starting with "F" and those starting with "M", we need to
+keep only comparisons between males and females, and we need to
+name the columns "Female", "Male", and "rxy".  We do that with the `clean_computeRxy_output()` function.
+```{r}
+rxy_clean <- clean_computeRxy_output(rxys)
+```
+The result looks like this:
+```{r}
+rxy_clean[1:10,]
+```
+
+Before we feed these values int `aor_pairs` we have to remove Female F_7FN in `actual_pairs` because
+it is named incorrectly (I think:  there is an F_07FN in the rxys file.  `aor_pairs` barks an error 
+about that.)
+```{r}
+actual_pairs_corrected <- actual_pairs %>%
+  filter(Female != "F_7FN")
+```
+
+Then we feed the actual values and all the values into the `aor_pairs` function.
 ```{r}
 set.seed(10)  # set a random number seed for reproducibility
-AOR <- aor_pairs(actual_pairs, rxys)
+AOR <- aor_pairs(actual_pairs_corrected, rxy_clean)
 
 # have a look at it:
 AOR

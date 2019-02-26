@@ -1,6 +1,6 @@
 CohoBroodstock
 ================
-04 February, 2019
+26 February, 2019
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -72,13 +72,17 @@ This creates, by default, two files named `spawn_matrix.csv` and
 
 # Actual vs Optimal vs Random Relatedness
 
-Here is how it goes. First, read the symmetrical full matrix of rxy
-values:
+Here is how it goes. We will show it from the genotype
+stage.
 
 ``` r
-file_path <- system.file("extdata/IGH_W1718_master_Kinsh_res.txt.gz", package = "CohoBroodstock")
+geno_path <- system.file("extdata/IGH_W1819_geno_aor.txt", package = "CohoBroodstock")
 
-rxys <- read_kinship_matrix(file_path)
+rxys <- computeRxy(geno_path)
+#>    user  system elapsed 
+#>   1.778   0.167   2.059 
+#> 
+#> Reading output files into data.frames... Done!
 ```
 
 Here is what the first few rows of that look like
@@ -86,26 +90,26 @@ Here is what the first few rows of that look like
 ``` r
 rxys[1:10, ]
 #> # A tibble: 10 x 3
-#>    Female Male       rxy
-#>    <chr>  <chr>    <dbl>
-#>  1 F_01F  M_01MJ -0.101 
-#>  2 F_02F  M_01MJ -0.0381
-#>  3 F_04F  M_01MJ -0.142 
-#>  4 F_05F  M_01MJ -0.264 
-#>  5 F_06F  M_01MJ  0.0185
-#>  6 F_07F  M_01MJ -0.0649
-#>  7 F_09F  M_01MJ -0.0411
-#>  8 F_10FN M_01MJ  0.246 
-#>  9 F_11F  M_01MJ  0.158 
-#> 10 F_12FN M_01MJ -0.0237
+#>    ind1  ind2   quellergt
+#>    <chr> <chr>      <dbl>
+#>  1 F_01F F_02F     0.013 
+#>  2 F_01F F_04F    -0.0304
+#>  3 F_01F F_05F     0.574 
+#>  4 F_01F F_07FN   -0.0806
+#>  5 F_01F F_08F    -0.0249
+#>  6 F_01F F_10F     0.0266
+#>  7 F_01F F_11F     0.183 
+#>  8 F_01F F_12F     0.0612
+#>  9 F_01F F_13F    -0.0127
+#> 10 F_01F F_15F    -0.181
 ```
 
 Then we need to read in the actual spawn pairs. This should be two
-columns: first Female and then
+columns: the first one named Female and then
 Male:
 
 ``` r
-pairs_file <- system.file("extdata/IGH_W1718_actual_spawn_pairs.csv", package = "CohoBroodstock")
+pairs_file <- system.file("extdata/IGH--W1819--actual_spawn_pairs.csv", package = "CohoBroodstock")
 actual_pairs <- read_csv(pairs_file)
 ```
 
@@ -116,41 +120,80 @@ actual_pairs[1:10, ]
 #> # A tibble: 10 x 2
 #>    Female Male  
 #>    <chr>  <chr> 
-#>  1 F_01F  M_14MJ
-#>  2 F_01F  M_21MJ
-#>  3 F_02F  M_46M 
-#>  4 F_02F  M_41MJ
-#>  5 F_04F  M_15M 
-#>  6 F_04F  M_17MJ
-#>  7 F_05F  M_06M 
-#>  8 F_05F  M_08MJ
-#>  9 F_06F  M_09MJ
-#> 10 F_06F  M_27M
+#>  1 F_01F  M_17M 
+#>  2 F_01F  M_29MJ
+#>  3 F_02F  M_38MJ
+#>  4 F_02F  M_39M 
+#>  5 F_04F  M_10MN
+#>  6 F_04F  M_11M 
+#>  7 F_05F  M_10MN
+#>  8 F_05F  M_12M 
+#>  9 F_08F  M_23MJ
+#> 10 F_08F  M_28M
 ```
 
-Then we get the Rxy’s of the actual spawn pairs, and alsothe same number
-of Optimal-mate Rxys, and the same number of Random-mate Rxys:
+Now, in order to use the function `aor_pairs()` we need to format the
+`rxys` tibble a little bit. We need to only keep the individuals
+starting with “F” and those starting with “M”, we need to keep only
+comparisons between males and females, and we need to name the columns
+“Female”, “Male”, and “rxy”. We do that with the
+`clean_computeRxy_output()` function.
+
+``` r
+rxy_clean <- clean_computeRxy_output(rxys)
+```
+
+The result looks like this:
+
+``` r
+rxy_clean[1:10,]
+#> # A tibble: 10 x 3
+#>    Female Male        rxy
+#>    <chr>  <chr>     <dbl>
+#>  1 F_01F  M_01M   -0.173 
+#>  2 F_01F  M_02M    0.544 
+#>  3 F_01F  M_04MJ  -0.168 
+#>  4 F_01F  M_05MJ  -0.058 
+#>  5 F_01F  M_06M    0.0978
+#>  6 F_01F  M_07M    0.357 
+#>  7 F_01F  M_08MJ  -0.0333
+#>  8 F_01F  M_09M    0.139 
+#>  9 F_01F  M_100M  -0.196 
+#> 10 F_01F  M_101MJ -0.0522
+```
+
+Before we feed these values int `aor_pairs` we have to remove Female
+F\_7FN in `actual_pairs` because it is named incorrectly (I think: there
+is an F\_07FN in the rxys file. `aor_pairs` barks an error about that.)
+
+``` r
+actual_pairs_corrected <- actual_pairs %>%
+  filter(Female != "F_7FN")
+```
+
+Then we feed the actual values and all the values into the `aor_pairs`
+function.
 
 ``` r
 set.seed(10)  # set a random number seed for reproducibility
-AOR <- aor_pairs(actual_pairs, rxys)
+AOR <- aor_pairs(actual_pairs_corrected, rxy_clean)
 
 # have a look at it:
 AOR
-#> # A tibble: 225 x 5
-#>    Female Male    `Spawn Pairs`   idx     rxy
-#>    <chr>  <chr>   <chr>         <int>   <dbl>
-#>  1 F_01F  M_14MJ  Actual            1 -0.153 
-#>  2 F_01F  M_21MJ  Actual            2 -0.269 
-#>  3 F_01F  M_52M   Optimal           1 -0.396 
-#>  4 F_01F  M_nb002 Optimal           2 -0.295 
-#>  5 F_01F  M_31MJ  Random            1 -0.0130
-#>  6 F_01F  M_19MJ  Random            2 -0.0382
-#>  7 F_02F  M_46M   Actual            1 -0.0493
-#>  8 F_02F  M_41MJ  Actual            2  0.0181
-#>  9 F_02F  M_17MJ  Optimal           1 -0.301 
-#> 10 F_02F  M_nb002 Optimal           2 -0.345 
-#> # … with 215 more rows
+#> # A tibble: 333 x 5
+#>    Female Male   `Spawn Pairs`   idx     rxy
+#>    <chr>  <chr>  <chr>         <int>   <dbl>
+#>  1 F_01F  M_17M  Actual            1 -0.021 
+#>  2 F_01F  M_29MJ Actual            2 -0.164 
+#>  3 F_01F  M_12M  Optimal           1 -0.281 
+#>  4 F_01F  M_53MJ Optimal           2 -0.403 
+#>  5 F_01F  M_41M  Random            1 -0.0333
+#>  6 F_01F  M_18M  Random            2  0.468 
+#>  7 F_02F  M_38MJ Actual            1 -0.192 
+#>  8 F_02F  M_39M  Actual            2 -0.176 
+#>  9 F_02F  M_73MJ Optimal           1 -0.260 
+#> 10 F_02F  M_97MJ Optimal           2 -0.266 
+#> # … with 323 more rows
 ```
 
 Then plot those values in a histogram:
