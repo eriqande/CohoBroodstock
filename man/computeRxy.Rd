@@ -20,4 +20,10 @@ file <- system.file("extdata",
                     "WSH_W1718_v5_two_column_data.txt.gz",
                     package = "CohoBroodstock")
 rxy <- computeRxy(file)
+
+# here is one that uses a file that has some loci that must be dropped
+file2 <- system.file("extdata",
+                    "IGH_W1920_v1_norefs.txt.gz",
+                    package = "CohoBroodstock")
+rxy <- computeRxy(file2)
 }

@@ -12,7 +12,7 @@ a tibble with columns named \code{ind1}, \code{ind2}, and \code{quellergt}}
 }
 \description{
 ComputeRxy() returns an rxy value for every single pair in the data
-set, but when we compare Actual, to Optimal, to Realized rxys
+set, but when we compare Actual, to Optimal, to Random rxys
 we want to only focus on the Males and Females denoted by a leading "F"
 or "M" in their names, respectively.  This function filters things
 down to just those individuals, and then also makes a column Female and

@@ -34,6 +34,16 @@ devtools::install_github("eriqande/CohoBroodstock")
 You also have to get the `related` package installed from R-forge.  That 
 requires some gfortran compilation.  We did that for Libby already.
 
+You get the package like this:
+```r
+install.packages("related", repos="http://R-Forge.R-project.org")
+```
+But it requires some gfortran compilation.  On Mac OSX you can try downloading gfortran-6.11 from
+[https://cran.r-project.org/bin/macosx/tools/](https://cran.r-project.org/bin/macosx/tools/).  It seems
+to compile with that...but fails with a seg fault.
+
+So, from the same page, for R 3.6 I also downloaded clang7 and installed it.
+
 # Preparing Spawning matrices
 
 This is set up now to use the _related_ package to compute the Rxy's.  
