@@ -1,6 +1,6 @@
 CohoBroodstock
 ================
-26 February, 2019
+28 May, 2020
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -9,20 +9,46 @@ one place to expedite Libby’s coho broodstock management work.
 
 # Installing
 
-If you don’t already have the `devtools` package, then do:
+If you don’t already have the `remotes` package, then do:
 
 ``` r
-install.packages("devtools")
+install.packages("remotes")
 ```
 
-Then use it to install this from GitHub:
+You also have to get the `related` package installed from R-forge before
+you can install CohoBroodstock. That requires some gfortran compilation.
+
+On Mac OSX, as of 2020-05-26 the installation procedure for
+CohoBroodstock goes like this:
+
+1.  Download and install the `clang-7.0.0.pkg` from
+    <https://cran.r-project.org/bin/macosx/tools/>.
+2.  Download and install the `gfortran-6.1.pkg` from
+    <https://cran.r-project.org/bin/macosx/tools/>.
+3.  The gfortran compiler does not get the `gfortran` executable
+    properly into the PATH variable. So, once gfortran is installed, you
+    have to put it in your PATH. One easy way to do that, if
+    `/usr/local/bin` is already in your path, is:
+
+<!-- end list -->
+
+    ln -s /usr/local/gfortran/bin/gfortran /usr/local/bin
+
+4.  Install the `related` package like this:
+
+<!-- end list -->
 
 ``` r
-devtools::install_github("eriqande/CohoBroodstock")
+install.packages("related", repos="http://R-Forge.R-project.org")
 ```
 
-You also have to get the `related` package installed from R-forge. That
-requires some gfortran compilation. We did that for Libby already.
+5.  Finally, install CohoBroodstock from GitHub:
+
+<!-- end list -->
+
+``` r
+remotes::install_github("eriqande/CohoBroodstock")
+```
 
 # Preparing Spawning matrices
 
@@ -80,7 +106,7 @@ geno_path <- system.file("extdata/IGH_W1819_geno_aor.txt", package = "CohoBroods
 
 rxys <- computeRxy(geno_path)
 #>    user  system elapsed 
-#>   1.778   0.167   2.059 
+#>   1.556   0.218   1.791 
 #> 
 #> Reading output files into data.frames... Done!
 ```

@@ -21,28 +21,39 @@ Libby's coho broodstock management work.
 
 # Installing
 
-If you don't already have the `devtools` package, then do:
+If you don't already have the `remotes` package, then do:
 ```{r, eval=FALSE}
-install.packages("devtools")
+install.packages("remotes")
 ```
 
-Then use it to install this from GitHub:
-```{r, eval=FALSE}
-devtools::install_github("eriqande/CohoBroodstock")
+
+You also have to get the `related` package installed from R-forge
+before you can install CohoBroodstock.  That 
+requires some gfortran compilation. 
+
+
+On Mac OSX, as of 2020-05-26 the installation procedure for CohoBroodstock
+goes like this:
+
+1. Download and install the `clang-7.0.0.pkg` from 
+[https://cran.r-project.org/bin/macosx/tools/](https://cran.r-project.org/bin/macosx/tools/).
+2. Download and install the `gfortran-6.1.pkg` from 
+[https://cran.r-project.org/bin/macosx/tools/](https://cran.r-project.org/bin/macosx/tools/).
+3. The gfortran compiler does not get the `gfortran` executable properly into the PATH
+variable.  So, once gfortran is installed, you have to put it in your PATH.  One easy way
+to do that, if `/usr/local/bin` is already in your path, is:
 ```
-
-You also have to get the `related` package installed from R-forge.  That 
-requires some gfortran compilation.  We did that for Libby already.
-
-You get the package like this:
+ln -s /usr/local/gfortran/bin/gfortran /usr/local/bin
+```
+4. Install the `related` package like this:
 ```r
 install.packages("related", repos="http://R-Forge.R-project.org")
 ```
-But it requires some gfortran compilation.  On Mac OSX you can try downloading gfortran-6.11 from
-[https://cran.r-project.org/bin/macosx/tools/](https://cran.r-project.org/bin/macosx/tools/).  It seems
-to compile with that...but fails with a seg fault.
+5. Finally, install CohoBroodstock from GitHub:
+```{r, eval=FALSE}
+remotes::install_github("eriqande/CohoBroodstock")
+```
 
-So, from the same page, for R 3.6 I also downloaded clang7 and installed it.
 
 # Preparing Spawning matrices
 
